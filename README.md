@@ -1,8 +1,6 @@
 # Box Breathing App
-
-<a href="https://jasonfleming1.github.io/boxbreathing" target="_blank">Begin Session</a>
-
 A simple web-based box breathing application. Built for relaxation and mindfulness, inspired by box breathing techniques used in stress management.
+<a href="https://jasonfleming1.github.io/boxbreathing" target="_blank">https://jasonfleming1.github.io/boxbreathing</a>
 
 ## Features
 - **Visual Breathing Guide**: Blue pulse traces a box outline, resetting on each inhale
@@ -12,8 +10,6 @@ A simple web-based box breathing application. Built for relaxation and mindfulne
 - **Hosted on GitHub Pages**: Deployed as a single `index.html` file
 
 ## Usage
-Hosted on GitHub Pages:
-- URL: <a href="https://jasonfleming1.github.io/boxbreathing" target="_blank">https://jasonfleming1.github.io/boxbreathing)</a>
 1. Click **Start** to begin the breathing cycle
 2. Follow the text prompts for breathing and use the pulse tracer to trace a box
 3. Click **Stop** to end
