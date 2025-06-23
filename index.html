@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>box breathing</title>
+    <title>mindfulness | box breathing</title>
     <style>
         body {
             display: flex;
@@ -65,7 +65,6 @@
     <canvas id="canvas" width="360" height="360"></canvas>
     <div id="status">click start</div>
     <button id="startStop">start</button>
-
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
@@ -93,14 +92,12 @@
             const now = Date.now();
             corners.forEach((corner, index) => {
                 let pulse = 0;
-                // Initial pulsing for lower-left on load/stop
                 if (index === 0 && !isRunning && initialPulseInterval) {
                     const elapsed = (now - corner.pulseTime) / 1000;
                     const seconds = elapsed % 4;
                     pulse = Math.max(0, Math.cos(Math.PI * (seconds % 1)) * Math.exp(-3 * (seconds % 1)));
                 }
-                // Pulsing when tracer reaches a corner
-                if (corner.pulseTime && now - corner.pulseTime < 1000) { // Pulse for 1 second
+                if (corner.pulseTime && now - corner.pulseTime < 1000) {
                     const elapsed = (now - corner.pulseTime) / 1000;
                     pulse = Math.max(0, Math.cos(Math.PI * elapsed) * Math.exp(-3 * elapsed));
                 }
@@ -120,7 +117,6 @@
             ctx.strokeStyle = '#00bfff';
             ctx.filter = 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.4))';
 
-            // Draw only the segments behind the pulse
             if (phaseIndex === 0 && progress > 0) {
                 ctx.beginPath();
                 ctx.moveTo(40, 320);
@@ -174,7 +170,6 @@
             const x = phase.start.x + (phase.end.x - phase.start.x) * progress;
             const y = phase.start.y + (phase.end.y - phase.start.y) * progress;
 
-            // Check if tracer is near a corner to trigger pulsing
             corners.forEach((corner, index) => {
                 const dist = Math.sqrt((x - corner.x) ** 2 + (y - corner.y) ** 2);
                 if (dist < 5 && !corner.pulseTime) { // Trigger pulse when close
@@ -263,8 +258,8 @@
             isRunning = !isRunning;
         });
 
-        // Initial state: show pulsing lower-left dot and pulse
         drawInitialPulse();
+        
     </script>
 </body>
 </html>
