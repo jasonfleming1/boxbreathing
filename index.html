@@ -82,10 +82,10 @@
         ];
 
         const corners = [
-            { x: 40, y: 320, pulseTime: null }, // Lower-left
-            { x: 40, y: 40, pulseTime: null },  // Top-left
-            { x: 320, y: 40, pulseTime: null }, // Top-right
-            { x: 320, y: 320, pulseTime: null } // Lower-right
+            { x: 40, y: 320, pulseTime: null },
+            { x: 40, y: 40, pulseTime: null },
+            { x: 320, y: 40, pulseTime: null },
+            { x: 320, y: 320, pulseTime: null }
         ];
 
         function drawCorners(phaseIndex, progress) {
@@ -172,9 +172,9 @@
 
             corners.forEach((corner, index) => {
                 const dist = Math.sqrt((x - corner.x) ** 2 + (y - corner.y) ** 2);
-                if (dist < 5 && !corner.pulseTime) { // Trigger pulse when close
+                if (dist < 5 && !corner.pulseTime) {
                     corner.pulseTime = Date.now();
-                    setTimeout(() => { corner.pulseTime = null; }, 1000); // Reset after 1s
+                    setTimeout(() => { corner.pulseTime = null; }, 1000);
                 }
             });
 
@@ -192,7 +192,7 @@
         }
 
         function drawInitialPulse() {
-            corners[0].pulseTime = Date.now(); // Start lower-left pulsing
+            corners[0].pulseTime = Date.now();
             initialPulseInterval = setInterval(() => {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 drawCorners(0, 0);
@@ -238,7 +238,7 @@
             }, 50);
         }
 
-        startStop.addEventListener('click', () => {
+        function handleStartStop() {
             if (isRunning) {
                 clearInterval(interval);
                 clearInterval(initialPulseInterval);
@@ -247,19 +247,24 @@
                 status.textContent = 'click start';
                 status.classList.remove('blue');
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                drawInitialPulse(); // Resume lower-left pulsing
+                drawInitialPulse();
             } else {
                 clearInterval(initialPulseInterval);
-                corners[0].pulseTime = null; // Stop lower-left pulsing
+                corners[0].pulseTime = null;
                 runCycle();
                 startStop.textContent = 'stop';
                 startStop.classList.add('running');
             }
             isRunning = !isRunning;
+        }
+
+        startStop.addEventListener('click', handleStartStop);
+        startStop.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            handleStartStop();
         });
 
         drawInitialPulse();
-        
     </script>
 </body>
 </html>
