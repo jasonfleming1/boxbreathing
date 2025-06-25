@@ -81,6 +81,19 @@
             color: #ff6666;
             text-shadow: 0 0 8px rgba(255, 102, 102, 0.7);
         }
+        #cancel.countdown {
+            color: #ff4d4d;
+            border: 2px solid #ff4d4d;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background-color: rgba(255, 77, 77, 0.1);
+        }
+        #cancel.countdown:hover {
+            color: #ff6666;
+            border-color: #ff6666;
+            background-color: rgba(255, 102, 102, 0.2);
+            text-shadow: 0 0 8px rgba(255, 102, 102, 0.7);
+        }
     </style>
 </head>
 <body>
@@ -248,11 +261,12 @@
             if (timeLeft < 0) {
                 clearInterval(timerInterval);
                 timerElement.remove();
-                cancelElement.remove();
+                cancelElement.classList.remove('countdown');
+                cancelElement.style.display = 'none'; // Hide cancel during tracer
                 timerElement = null;
-                cancelElement = null;
                 startStop.textContent = 'stop';
                 startStop.style.display = 'block';
+                startStop.classList.remove('running'); // Restore original appearance
                 status.classList.add('blue');
                 runBreathingCycle();
             }
@@ -269,6 +283,7 @@
             cancelElement.id = 'cancel';
             cancelElement.textContent = 'cancel';
             cancelElement.style.opacity = '1';
+            cancelElement.classList.add('countdown'); // Apply countdown styles
             cancelElement.addEventListener('click', resetState);
             status.appendChild(cancelElement);
         }
@@ -311,7 +326,10 @@
             status.textContent = 'press start';
             status.classList.remove('blue');
             if (timerElement) timerElement.remove();
-            if (cancelElement) cancelElement.remove();
+            if (cancelElement) {
+                cancelElement.classList.remove('countdown');
+                cancelElement.style.display = 'none';
+            }
             timerElement = null;
             cancelElement = null;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
