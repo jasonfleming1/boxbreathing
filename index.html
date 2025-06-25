@@ -61,38 +61,24 @@
             border-color: #00bfff;
             filter: drop-shadow(0 0 8px rgba(0, 191, 255, 0.5));
         }
+        button.countdown {
+            background-color: rgba(255, 77, 77, 0.1);
+            color: #ff4d4d;
+            border-color: #ff4d4d;
+            filter: drop-shadow(0 0 8px rgba(255, 77, 77, 0.5));
+        }
+        button.countdown:hover {
+            background-color: rgba(255, 102, 102, 0.2);
+            color: #ff6666;
+            border-color: #ff6666;
+            filter: drop-shadow(0 0 8px rgba(255, 102, 102, 0.7));
+        }
         #timer {
             font-size: 24px;
             color: #ff4d4d;
             text-shadow: 0 0 5px rgba(255, 77, 77, 0.5);
             transition: opacity 0.4s ease;
             z-index: 10;
-        }
-        #cancel {
-            font-size: 18px;
-            color: #ff4d4d;
-            text-decoration: none;
-            cursor: pointer;
-            text-shadow: 0 0 5px rgba(255, 77, 77, 0.5);
-            transition: color 0.4s ease, text-shadow 0.4s ease;
-            z-index: 10;
-        }
-        #cancel:hover {
-            color: #ff6666;
-            text-shadow: 0 0 8px rgba(255, 102, 102, 0.7);
-        }
-        #cancel.countdown {
-            color: #ff4d4d;
-            border: 2px solid #ff4d4d;
-            padding: 8px 16px;
-            border-radius: 8px;
-            background-color: rgba(255, 77, 77, 0.1);
-        }
-        #cancel.countdown:hover {
-            color: #ff6666;
-            border-color: #ff6666;
-            background-color: rgba(255, 102, 102, 0.2);
-            text-shadow: 0 0 8px rgba(255, 102, 102, 0.7);
         }
     </style>
 </head>
@@ -106,12 +92,12 @@
         const status = document.getElementById('status');
         const startStop = document.getElementById('startStop');
         let isRunning = false;
+        let isCountdown = false;
         let interval;
         let initialPulseInterval;
         let timerInterval;
         let timeLeft = 4; // 4-second countdown
         let timerElement = null;
-        let cancelElement = null;
 
         const phases = [
             { text: 'inhale', start: { x: 40, y: 320 }, end: { x: 40, y: 40 } },
@@ -261,31 +247,21 @@
             if (timeLeft < 0) {
                 clearInterval(timerInterval);
                 timerElement.remove();
-                cancelElement.classList.remove('countdown');
-                cancelElement.style.display = 'none'; // Hide cancel during tracer
                 timerElement = null;
+                isCountdown = false;
                 startStop.textContent = 'stop';
-                startStop.style.display = 'block';
-                startStop.classList.remove('running'); // Restore original appearance
+                startStop.classList.remove('countdown', 'running');
                 status.classList.add('blue');
                 runBreathingCycle();
             }
         }
 
-        function createTimerAndCancel() {
+        function createTimer() {
             status.textContent = '';
             timerElement = document.createElement('div');
             timerElement.id = 'timer';
             timerElement.style.opacity = '1';
             status.appendChild(timerElement);
-
-            cancelElement = document.createElement('a');
-            cancelElement.id = 'cancel';
-            cancelElement.textContent = 'cancel';
-            cancelElement.style.opacity = '1';
-            cancelElement.classList.add('countdown'); // Apply countdown styles
-            cancelElement.addEventListener('click', resetState);
-            status.appendChild(cancelElement);
         }
 
         function runBreathingCycle() {
@@ -308,8 +284,11 @@
         }
 
         function runCountdown() {
-            startStop.style.display = 'none';
-            createTimerAndCancel();
+            createTimer();
+            startStop.textContent = 'cancel';
+            startStop.classList.remove('running');
+            startStop.classList.add('countdown');
+            isCountdown = true;
             timeLeft = 4;
             updateTimer();
             timerInterval = setInterval(updateTimer, 1000);
@@ -320,18 +299,13 @@
             clearInterval(timerInterval);
             clearInterval(initialPulseInterval);
             isRunning = false;
+            isCountdown = false;
             startStop.textContent = 'start';
-            startStop.style.display = 'block';
-            startStop.classList.remove('running');
+            startStop.classList.remove('running', 'countdown');
             status.textContent = 'press start';
             status.classList.remove('blue');
             if (timerElement) timerElement.remove();
-            if (cancelElement) {
-                cancelElement.classList.remove('countdown');
-                cancelElement.style.display = 'none';
-            }
             timerElement = null;
-            cancelElement = null;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             corners.forEach(corner => corner.pulseTime = null);
             drawInitialPulse();
@@ -344,6 +318,8 @@
                 runCountdown();
                 startStop.classList.add('running');
                 isRunning = true;
+            } else if (isCountdown) {
+                resetState();
             } else {
                 resetState();
             }
